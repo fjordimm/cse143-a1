@@ -79,6 +79,12 @@ class NaiveBayesClassifier(BinaryClassifier):
 
         # Calculate Probability
 
+        # print(self.positive)
+        thing_pos = [(i, float(self.positive[i])) for i in range(len(self.positive))]
+        # print(thing_pos)
+        thing_pos.sort(key=lambda e: e[1])
+        print(thing_pos)
+
         for x in range(len(self.positive)):
             p_prob = (self.positive[x] + 1)/(np.sum(self.positive) + len(self.positive))
             self.positive[x] = p_prob

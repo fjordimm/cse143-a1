@@ -37,16 +37,16 @@ def main():
 
     train_frame, test_frame = read_data(args.path)
 
-    INDEX_OF_THING = 28
-    print()
-    print("INDEX = %s" % (INDEX_OF_THING))
-    print()
-    print("TEXT...")
-    print(test_frame.get("text")[INDEX_OF_THING])
-    print()
-    print("ACTUAL CLASSIFICATION...")
-    print(test_frame.get("label")[INDEX_OF_THING])
-    print()
+    # INDEX_OF_THING = 43
+    # print()
+    # print("INDEX = %s" % (INDEX_OF_THING))
+    # print()
+    # print("TEXT...")
+    # print(test_frame.get("text")[INDEX_OF_THING])
+    # print()
+    # print("ACTUAL CLASSIFICATION...")
+    # print(test_frame.get("label")[INDEX_OF_THING])
+    # print()
 
     # Convert text into features
     if args.feature == "unigram":
@@ -90,10 +90,10 @@ def main():
     start_time = time.time()
     model.fit(X_train,Y_train)
 
-    X_train_subset = np.array([X_train[INDEX_OF_THING]])
-    Y_train_subset = np.array([Y_train[INDEX_OF_THING]])
+    # X_test_subset = np.array([X_test[INDEX_OF_THING]])
+    # Y_test_subset = np.array([Y_test[INDEX_OF_THING]])
 
-    accuracy(model.predict(X_train_subset), Y_train_subset)
+    # accuracy(model.predict(X_test_subset), Y_test_subset)
 
     # print("===== Train Accuracy =====")
     # accuracy(model.predict(X_train), Y_train)
