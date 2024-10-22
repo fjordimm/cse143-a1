@@ -48,14 +48,40 @@ class NaiveBayesClassifier(BinaryClassifier):
     """
     def __init__(self):
         # Add your code here!
-        raise Exception("Must be implemented")
+        self.positive = np.array([]) # probability for positive reviews
+        self.negative = np.array([]) # probability for negative reviews
+        self.num_positve = 0    # number of positive reviews
+        self.num_negative = 0   # number of negative reviews
         
-
     def fit(self, X, Y):
         # Add your code here!
-        raise Exception("Must be implemented")
+        self.positive = np.full(len(X[0]),0) # Fill positive and negative arrays with 0s and prepare to add
+        self.negative = np.full(len(X[0]),0)
         
-    
+        '''
+        print("Length of X[0]: ", len(X[0]))
+        print("-----------Positive--------")
+        print(self.positive)
+        print("Length of positive: ", len(self.positive))
+        '''
+
+        # Couting words and number of good/bad reviews
+        for index in range(len(Y)):
+            if Y[index] == 1:
+                arr = self.positive
+                self.num_positve += 1
+            else:
+                arr = self.negative
+                self.num_negative += 1
+
+            for x_index in range(len(X[index])):
+                arr[x_index] = arr[x_index] + X[index][x_index]
+
+        #print(self.positive)
+        #print(self.negative) 
+
+
+
     def predict(self, X):
         # Add your code here!
         raise Exception("Must be implemented")
