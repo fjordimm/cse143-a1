@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 # You need to build your own model here instead of using existing Python
 # packages such as sklearn!
@@ -50,14 +51,15 @@ class NaiveBayesClassifier(BinaryClassifier):
         # Add your code here!
         self.positive = np.array([]) # probability for positive reviews
         self.negative = np.array([]) # probability for negative reviews
-        self.num_positve = 0    # number of positive reviews
-        self.num_negative = 0   # number of negative reviews
+        self.p_positve = 0    # probablity of positive reviews
+        self.p_negative = 0   # probablity of negative reviews
         
     def fit(self, X, Y):
         # Add your code here!
-        self.positive = np.full(len(X[0]),0) # Fill positive and negative arrays with 0s and prepare to add
-        self.negative = np.full(len(X[0]),0)
-        
+        self.positive = np.full(len(X[0]),0.0) # Fill positive and negative arrays with 0s and prepare to add
+        self.negative = np.full(len(X[0]),0.0)
+        num_positve = 0
+        num_negative = 0
         '''
         print("Length of X[0]: ", len(X[0]))
         print("-----------Positive--------")
@@ -69,10 +71,10 @@ class NaiveBayesClassifier(BinaryClassifier):
         for index in range(len(Y)):
             if Y[index] == 1:
                 arr = self.positive
-                self.num_positve += 1
+                num_positve += 1
             else:
                 arr = self.negative
-                self.num_negative += 1
+                num_negative += 1
 
             for x_index in range(len(X[index])):
                 arr[x_index] = arr[x_index] + X[index][x_index]
@@ -80,11 +82,37 @@ class NaiveBayesClassifier(BinaryClassifier):
         #print(self.positive)
         #print(self.negative) 
 
+        # Calculate Probability
 
+        for x in range(len(self.positive)):
+            p_prob = (self.positive[x] + 1)/(np.sum(self.positive) + len(self.positive))
+            self.positive[x] = p_prob
+            n_prob = (self.negative[x] + 1)/(np.sum(self.negative) + len(self.negative))
+            self.negative[x] = n_prob
+        
+        #print(self.positive)
+        #print(self.negative)
+        self.p_positve = num_positve / len(Y)
+        self.p_negative = num_negative / len(Y)
 
     def predict(self, X):
         # Add your code here!
-        raise Exception("Must be implemented")
+        Y = []
+        for x in X:
+            p_pos = math.log(self.p_positve,2)
+            p_neg = math.log(self.p_negative,2)
+            if len(x) != len(self.positive):
+                print("Lengths of two sets are not equal!")
+            for i in range(len(x)):
+                p_pos += (math.log(self.positive[i], 2) * x[i])
+                p_neg += (math.log(self.negative[i], 2) * x[i])
+            
+            if p_pos > p_neg:
+                Y.append(1)
+            else:
+                Y.append(0)
+        return np.array(Y)
+                
 
 # TODO: Implement this
 class LogisticRegressionClassifier(BinaryClassifier):
