@@ -43,19 +43,17 @@ class AlwaysPredictZero(BinaryClassifier):
     def predict(self, X):
         return [0]*len(X)
 
-# TODO: Implement this
+
 class NaiveBayesClassifier(BinaryClassifier):
     """Naive Bayes Classifier
     """
     def __init__(self):
-        # Add your code here!
         self.positive = np.array([]) # probability for positive reviews
         self.negative = np.array([]) # probability for negative reviews
         self.p_positve = 0    # probablity of positive reviews
         self.p_negative = 0   # probablity of negative reviews
         
     def fit(self, X, Y):
-        # Add your code here!
         self.positive = np.full(len(X[0]),0.0) # Fill positive and negative arrays with 0s and prepare to add
         self.negative = np.full(len(X[0]),0.0)
         num_positve = 0
@@ -79,9 +77,6 @@ class NaiveBayesClassifier(BinaryClassifier):
             for x_index in range(len(X[index])):
                 arr[x_index] = arr[x_index] + X[index][x_index]
 
-        #print(self.positive)
-        #print(self.negative) 
-
         # Calculate Probability
 
         for x in range(len(self.positive)):
@@ -90,13 +85,10 @@ class NaiveBayesClassifier(BinaryClassifier):
             n_prob = (self.negative[x] + 1)/(np.sum(self.negative) + len(self.negative))
             self.negative[x] = n_prob
         
-        #print(self.positive)
-        #print(self.negative)
         self.p_positve = num_positve / len(Y)
         self.p_negative = num_negative / len(Y)
 
     def predict(self, X):
-        # Add your code here!
         Y = []
         for x in X:
             p_pos = math.log(self.p_positve,2)
@@ -114,7 +106,6 @@ class NaiveBayesClassifier(BinaryClassifier):
         return np.array(Y)
                 
 
-# TODO: Implement this
 class LogisticRegressionClassifier(BinaryClassifier):
     """Logistic Regression Classifier
     """
@@ -162,6 +153,7 @@ class LogisticRegressionClassifier(BinaryClassifier):
             else:
                 predictions.append(0)
         return predictions
+
 
 # you can change the following line to whichever classifier you want to use for
 # the bonus.
