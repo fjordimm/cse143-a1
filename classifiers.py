@@ -99,13 +99,15 @@ class LogisticRegressionClassifier(BinaryClassifier):
     
     def predict(self, X):
        
-       linear_model = np.dot(X, self.weights) + self.bias
-       y_predicted = self.sigmoid(linear_model)
-
-       for prob in y_predicted:
-           if prob > 0.5: return 1 
-           else: return 0
-
+        linear_model = np.dot(X, self.weights) + self.bias
+        y_predicted = self.sigmoid(linear_model)
+        predictions = []
+        for prob in y_predicted:
+            if prob > 0.5:
+               predictions.append(1)
+            else:
+                predictions.append(0)
+        return predictions
 
 # you can change the following line to whichever classifier you want to use for
 # the bonus.
