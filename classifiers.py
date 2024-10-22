@@ -64,20 +64,50 @@ class NaiveBayesClassifier(BinaryClassifier):
 class LogisticRegressionClassifier(BinaryClassifier):
     """Logistic Regression Classifier
     """
-    def __init__(self):
-        # Add your code here!
-        raise Exception("Must be implemented")
+    def __init__(self,learning_rate=0.01, iterations=1000):
+        self.learning_rate = learning_rate
+        self.iterations = iterations
+        self.weights = None
+        self.bias = None
         
-
+    def sigmoid(self, z):
+        return 1 / (1+ np.exp(-z))
+    
     def fit(self, X, Y):
-        # Add your code here!
-        raise Exception("Must be implemented")
-        
+
+        num_samples, num_features = X.shape
+
+        self.weights = np.zeros(num_features)
+
+        self.bias = 0
+
+        # Gradient descent
+        for _ in range(self.iterations):
+            # Linear combination of inputs and weights
+            linear_model = np.dot(X, self.weights) + self.bias
+
+            # using sigmoid function for the predictions 
+            y_predicted = self.sigmoid(linear_model)
+
+            # Compute gradients
+            dw = (1 / num_samples) * np.dot(X.T, (y_predicted - Y))
+            db = (1 / num_samples) * np.sum(y_predicted - Y)
+
+            # Update weights and bias
+            self.weights -= self.learning_rate * dw
+            self.bias -= self.learning_rate * db
     
     def predict(self, X):
-        # Add your code here!
-        raise Exception("Must be implemented")
-
+       
+        linear_model = np.dot(X, self.weights) + self.bias
+        y_predicted = self.sigmoid(linear_model)
+        predictions = []
+        for prob in y_predicted:
+            if prob > 0.5:
+               predictions.append(1)
+            else:
+                predictions.append(0)
+        return predictions
 
 # you can change the following line to whichever classifier you want to use for
 # the bonus.
