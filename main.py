@@ -37,6 +37,17 @@ def main():
 
     train_frame, test_frame = read_data(args.path)
 
+    INDEX_OF_THING = 28
+    print()
+    print("INDEX = %s" % (INDEX_OF_THING))
+    print()
+    print("TEXT...")
+    print(test_frame.get("text")[INDEX_OF_THING])
+    print()
+    print("ACTUAL CLASSIFICATION...")
+    print(test_frame.get("label")[INDEX_OF_THING])
+    print()
+
     # Convert text into features
     if args.feature == "unigram":
         feat_extractor = UnigramFeature()
@@ -58,14 +69,12 @@ def main():
     X_train = feat_extractor.transform_list(tokenized_text)
     Y_train = train_frame['label']
 
-
     # form test set for evaluation
     tokenized_text = []
     for i in range(0, len(test_frame['text'])):
         tokenized_text.append(tokenize(test_frame['text'][i]))
     X_test = feat_extractor.transform_list(tokenized_text)
     Y_test = test_frame['label']
-
 
     if args.model == "AlwaysPredictZero":
         model = AlwaysPredictZero()
@@ -78,17 +87,21 @@ def main():
     else:
         raise Exception("Pass AlwaysPositive, NaiveBayes, LogisticRegression to --model")
 
-
     start_time = time.time()
     model.fit(X_train,Y_train)
-    print("===== Train Accuracy =====")
-    accuracy(model.predict(X_train), Y_train)
+
+    X_train_subset = np.array([X_train[INDEX_OF_THING]])
+    Y_train_subset = np.array([Y_train[INDEX_OF_THING]])
+
+    accuracy(model.predict(X_train_subset), Y_train_subset)
+
+    # print("===== Train Accuracy =====")
+    # accuracy(model.predict(X_train), Y_train)
     
-    print("===== Test Accuracy =====")
-    accuracy(model.predict(X_test), Y_test)
+    # print("===== Test Accuracy =====")
+    # accuracy(model.predict(X_test), Y_test)
 
-    print("Time for training and test: %.2f seconds" % (time.time() - start_time))
-
+    # print("Time for training and test: %.2f seconds" % (time.time() - start_time))
 
 
 if __name__ == '__main__':
