@@ -97,34 +97,76 @@ class BigramFeature(FeatureExtractor):
     """Bigram feature extractor analogous to the unigram one.
     """
     def __init__(self):
-        # Add your code here!
-        raise Exception("Must be implemented")
+        self.bigram = {}
     def fit(self, text_set):
-        # Add your code here!
-        raise Exception("Must be implemented")
+        """Fit bigram feature extractor based on given data"""
+        index = 0
+        for sentence in text_set:
+            for i in range(len(sentence) - 1):
+                bigram = (sentence[i].lower(), sentence[i+1].lower())
+                if bigram not in self.bigram:
+                    self.bigram[bigram] = index
+                    index += 1
     def transform(self, text):
-        # Add your code here!
-        raise Exception("Must be implemented")
+        """Transform a given sentence into bigram feature vectors"""
+        feature = np.zeros(len(self.bigram))
+        for i in range(len(text) - 1):
+            bigram = (text[i].lower(), text[i+1].lower())
+            if bigram in self.bigram:
+                feature[self.bigram[bigram]] += 1
+        return feature
     def transform_list(self, text_set):
-        # Add your code here!
-        raise Exception("Must be implemented")
+        """Transform a list of tokenized sentences into bigram vectors"""
+        features = []
+        for sentence in text_set:
+            features.append(self.transform(sentence))
+        return np.array(features)
 
 class CustomFeature(FeatureExtractor):
     """customized feature extractor, such as TF-IDF
     """
     def __init__(self):
-        # Add your code here!
-        raise Exception("Must be implemented")
-    def fit(self, text_set):
-        # Add your code here!
-        raise Exception("Must be implemented")
-    def transform(self, text):
-        # Add your code here!
-        raise Exception("Must be implemented")
-    def transform_list(self, text_set):
-        # Add your code here!
-        raise Exception("Must be implemented")
+        self.vocab = {}
+        self.idf = {}
+    def fit(self, text_set: list):
+        """Fit the TF-IDF extractor based on given data"""
+        index = 0
+        document_count = len(text_set)
+        word_doc_count = {}
+
+        # Create vocabulary and calculate document frequency
+        for sentence in text_set:
+            seen_in_doc = set()
+            for word in sentence:
+                word = word.lower()
+                if word not in self.vocab:
+                    self.vocab[word] = index
+                    index += 1
+                if word not in seen_in_doc:
+                    seen_in_doc.add(word)
+                    word_doc_count[word] = word_doc_count.get(word, 0) + 1
+        
+        # Calculate IDF
+        for word, doc_count in word_doc_count.items():
+            self.idf[word] = np.log(document_count / (1 + doc_count))  # IDF with smoothing
+
+    def transform(self, text: list):
+        """Transform a given sentence into a TF-IDF vector"""
+        tf = np.zeros(len(self.vocab))
+        for word in text:
+            word = word.lower()
+            if word in self.vocab:
+                tf[self.vocab[word]] += 1
+        tf = tf / np.sum(tf)  # Term Frequency
+        tfidf = tf * np.array([self.idf[word] if word in self.idf else 0 for word in self.vocab])
+        return tfidf
+    
+    def transform_list(self, text_set: list):
+        """Transform a list of tokenized sentences into TF-IDF vectors"""
+        features = []
+        for sentence in text_set:
+            features.append(self.transform(sentence))
+        return np.array(features)
 
 
         
-#Can Stupid Backoff be implemented?
