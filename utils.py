@@ -60,6 +60,10 @@ class UnigramFeature(FeatureExtractor):
                     index += 1
                 else:
                     continue
+        
+        array_of_thing = [(key, val) for key, val in self.unigram.items() if val == 3774 or val == 3273 or val == 7233 or val == 10476 or val == 18740 or val == 1811 or val == 5236 or val == 6341 or val == 13017 or val == 23244]
+        print(array_of_thing)
+        exit()
                     
     def transform(self, text: list):
         """Transform a given sentence into vectors based on the extractor you got from self.fit()
