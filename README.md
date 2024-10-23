@@ -13,3 +13,7 @@ To run our Logistic Regression classifier, run:
 ```bash
 python3 main.py --model "LogisticRegression"
 ```
+
+### Important Note
+
+The code will test on the dev set in the current state.
